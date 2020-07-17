@@ -25,7 +25,7 @@ export class RecipeDatabase extends BaseDataBase {
         .into(RecipeDatabase.TABLE_NAME);
         BaseDataBase.destroyConnection()
     }
-    public async getUserByEmail(id: string): Promise<any> {
+    public async getRecipeById(id: string): Promise<any> {
         const result = await this.getconnection()
           .select("*")
           .from(RecipeDatabase.TABLE_NAME)
