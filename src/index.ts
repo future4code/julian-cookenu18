@@ -119,28 +119,6 @@ app.get("/user/profile", async (req: Request, res: Response) => {
   }
 });
 
-app.delete("/user/:id", async (req: Request, res: Response) => {
-  try {
-    const authenticator = new Authenticator()
-    const tokenData = authenticator.getData(req.headers.authorization as string)
-
-    if (tokenData.role !== "ADMIN") {
-      throw new Error("Apenas administradores podem deletar outro usuário")
-    }
-
-    const userDB = new UserDatabase()
-    await userDB.deleteUser(req.params.id)
-
-    res.status(200).send({
-      message: "Usuário deletado"
-    })
-  } catch (err) {
-    res.status(400).send({
-      message: err.message,
-    });
-  }
-});
-
 app.get("/user/:id", async (req: Request, res: Response) => {
   try {
     const authenticator = new Authenticator();
@@ -201,7 +179,54 @@ app.post("/recipe", async (req: Request, res: Response) => {
       mesage: err.message
     })
   }
-})
+});
+
+app.get("/recipe/:id", async (req: Request, res: Response) => {
+  try {
+
+    const authenticator = new Authenticator();
+    authenticator.getData(req.headers.authorization as string);
+
+    const recipeDb = new RecipeDatabase()
+    const recipe = await recipeDb.getRecipeById(req.params.id)
+    const createdAt = moment(recipe.creation_date).format("DD/MM/YYYY")
+
+    res.status(200).send({
+      id: recipe.id,
+      title: recipe.title,
+      ingredients: recipe.ingredients,
+      description: recipe.description,
+      creation_date: createdAt
+    })
+
+  } catch (err) {
+    res.status(400).send({
+      mesage: err.message
+    })
+  }
+});
+
+app.delete("/user/:id", async (req: Request, res: Response) => {
+  try {
+    const authenticator = new Authenticator()
+    const tokenData = authenticator.getData(req.headers.authorization as string)
+
+    if (tokenData.role !== "ADMIN") {
+      throw new Error("Apenas administradores podem deletar outro usuário")
+    }
+
+    const userDB = new UserDatabase()
+    await userDB.deleteUser(req.params.id)
+
+    res.status(200).send({
+      message: "Usuário deletado"
+    })
+  } catch (err) {
+    res.status(400).send({
+      message: err.message,
+    });
+  }
+});
 
 const server = app.listen(process.env.PORT || 3003, () => {
   if (server) {
