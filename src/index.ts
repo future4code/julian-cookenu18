@@ -7,6 +7,9 @@ import { Authenticator } from "./services/Authenticator";
 import { HashManager } from "./services/HashManager";
 import { RecipeDatabase } from "./data/RecipeDatabase";
 import moment from "moment";
+import { followUser } from './endpoints/followUser'
+import { unFollowUser } from './endpoints/unFollowUser'
+import { getFeed } from './endpoints/getFeed'
 
 
 dotenv.config();
@@ -14,6 +17,15 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
+
+
+
+
+
+
+app.post('/user/follow', followUser);
+app.post('/user/unfollow', unFollowUser);
+app.get('/feed', getFeed);
 
 app.post("/signup", async (req: Request, res: Response) => {
   try {
@@ -233,6 +245,6 @@ const server = app.listen(process.env.PORT || 3003, () => {
     const address = server.address() as AddressInfo;
     console.log(`Server is running in http://localhost:${address.port}`);
   } else {
-    console.error(`Failure upon starting server.`);
+    console.error(`Failure starting server.`);
   }
 });
