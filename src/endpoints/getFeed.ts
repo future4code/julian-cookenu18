@@ -1,6 +1,6 @@
 import { Request , Response} from 'express'
 import { Authenticator } from '../services/Authenticator'
-import { BaseDatabase } from '../data/BaseDatabase'
+import { BaseDataBase } from '../data/BaseDatabase'
 import { FeedDatabase } from '../data/feedDatabase'
 
 
@@ -10,7 +10,7 @@ try{
 
     const token = req.headers.authorization as string
     const authenticator = new Authenticator()
-    const authenticationData = authenticator.verify(token)
+    const authenticationData = authenticator.getData(token)
     const userid = authenticationData.id
 
 
@@ -28,6 +28,6 @@ res.status(400).send ({
 
 }
 
-await BaseDatabase.destroyConnection()
+await BaseDataBase.destroyConnection()
 
 }

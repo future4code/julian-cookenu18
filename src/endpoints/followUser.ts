@@ -1,7 +1,7 @@
 import {Request , Response} from 'express'
 import { Authenticator } from '../services/Authenticator'
 import {UserDatabase} from '../data/UserDatabase'
-import {BaseDatabase} from '../data/BaseDatabase'
+import {BaseDataBase} from '../data/BaseDatabase'
 import { UsersRelationDatabase } from '../data/UsersRelationDatabase'
 
 export const followUser = async (req: Request, res:Response) => {
@@ -11,7 +11,7 @@ export const followUser = async (req: Request, res:Response) => {
     const userToFollowId = req.body.userToFollowId
 
     const authenticator = new Authenticator()
-    const authenticationData = authenticator.verify(token)
+    const authenticationData = authenticator.getData(token)
     const userId = authenticationData.id
         
 
@@ -41,5 +41,5 @@ export const followUser = async (req: Request, res:Response) => {
             message: error.message
         })
     }
-    await BaseDatabase.destroyConnection()
+    await BaseDataBase.destroyConnection()
 }
